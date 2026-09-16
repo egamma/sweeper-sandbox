@@ -20,7 +20,7 @@ const onlyIdx = args.indexOf('--only');
 const only = onlyIdx >= 0 ? args[onlyIdx + 1] : undefined;
 
 const sh = (cmd, cmdArgs, opts = {}) =>
-  execFileSync(cmd, cmdArgs, { cwd: root, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'], ...opts }).trim();
+  (execFileSync(cmd, cmdArgs, { cwd: root, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'], ...opts }) ?? '').trim();
 const gh = (...a) => sh('gh', a);
 const git = (...a) => sh('git', a);
 
