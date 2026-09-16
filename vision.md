@@ -45,3 +45,5 @@ for the chores of writing in markdown (timestamps, heading slugs).
 - Duplicates are closed in favor of the older, better-described issue.
 - Fixes land as direct commits on `main` and ship in the next semver tag; the
   release notes are the tag's commit list.
+- Issues are filed by the repository owner on behalf of outside reporters;
+  who filed an issue carries no weight in how it is handled.
