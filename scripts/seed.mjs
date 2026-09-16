@@ -5,9 +5,10 @@
 // seeded issue as "not planned" and opens fresh copies (numbers advance,
 // titles are the stable key).
 //
-//   node scripts/seed.mjs            # top up to the seeded state
-//   node scripts/seed.mjs --reset    # retire the open seeded set, then reseed
+//   node scripts/seed.mjs                  # labels + issues (the default: all four defects stay planted)
+//   node scripts/seed.mjs --reset          # retire the open seeded set, then reseed
 //   node scripts/seed.mjs --only labels|issues|history
+//   node scripts/seed.mjs --with-history   # ALSO lay down the fix/release history (opt-in, see below)
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -16,6 +17,7 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const reset = args.includes('--reset');
+const withHistory = args.includes('--with-history');
 const onlyIdx = args.indexOf('--only');
 const only = onlyIdx >= 0 ? args[onlyIdx + 1] : undefined;
 
@@ -97,10 +99,13 @@ function seedIssues() {
 }
 
 // ---- history --------------------------------------------------------------
-// The tracker's ground truth: v0.1.0 on the pristine commit; slugify fixed on
-// main and released in v0.2.0; timestampFormat fixed on main after the tag
-// (unreleased); the word-count fix only on a branch that never merges.
-// Commit messages name the defect, never an issue number.
+// OPT-IN (`--with-history` or `--only history`), NOT part of the default seed:
+// it fixes two of the planted defects on main (slugify, released in v0.2.0;
+// timestampFormat, unreleased) and puts the word-count fix on a branch — the
+// ground truth for an implemented-on-main triage lane. The default sandbox
+// keeps all four defects open so implement/spec flows can be exercised on
+// them; rolled back to that state on 2026-09-16. Commit messages name the
+// defect, never an issue number.
 const statsPath = path.join(root, 'src', 'stats.ts');
 const testPath = path.join(root, 'test', 'stats.test.ts');
 
@@ -195,5 +200,5 @@ function seedHistory() {
 }
 
 if (!only || only === 'labels') seedLabels();
-if (!only || only === 'history') seedHistory();
+if (only === 'history' || (!only && withHistory)) seedHistory();
 if (!only || only === 'issues') seedIssues();

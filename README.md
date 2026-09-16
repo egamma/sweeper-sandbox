@@ -44,12 +44,15 @@ Press F5 in VS Code to run the extension in an Extension Development Host.
 ## Seeding the sandbox
 
 `scripts/seed.mjs` is run by the repository owner with the `gh` CLI signed in.
-It is idempotent: it creates missing labels, opens every seeded issue whose title
-has no open twin, and lays down the fix commits and release tags if absent.
+It is idempotent: it creates missing labels and opens every seeded issue whose
+title has no open twin. By default every planted defect stays open on `main`;
+`--with-history` additionally lays down fix commits and release tags for two of
+them (opt-in, for testing an implemented-on-main lane).
 
 ```sh
-node scripts/seed.mjs            # top up to the seeded state
-node scripts/seed.mjs --reset    # close every open seeded issue, then reseed
+node scripts/seed.mjs                  # top up to the seeded state
+node scripts/seed.mjs --reset          # close every open seeded issue, then reseed
+node scripts/seed.mjs --with-history   # also seed the fix/release history
 ```
 
 GitHub issues cannot be deleted, so a reset closes the old set as *not planned*
