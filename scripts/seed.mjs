@@ -51,7 +51,17 @@ const labels = [
   ['web', 'c5def5', 'Area: running on vscode.dev'],
 ];
 
+// GitHub seeds every new repo with these; they compete with the vocabulary above
+// (`duplicate` vs `*duplicate`, `enhancement` vs `feature-request`), so they go.
+const defaultLabels = ['accessibility', 'documentation', 'duplicate', 'enhancement', 'good first issue',
+  'help wanted', 'invalid', 'question', 'wontfix'];
+
 function seedLabels() {
+  const existing = new Set(JSON.parse(gh('label', 'list', '--limit', '200', '--json', 'name')).map((l) => l.name));
+  for (const name of defaultLabels.filter((n) => existing.has(n))) {
+    gh('label', 'delete', name, '--yes');
+    console.log(`label    removed ${name}`);
+  }
   for (const [name, color, description] of labels) {
     gh('label', 'create', name, '--color', color, '--description', description, '--force');
   }
