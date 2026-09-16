@@ -1,0 +1,87 @@
+[
+  {
+    "title": "Extension feels slow",
+    "labels": [],
+    "body": "Typing feels laggy since I installed this. Not sure if it's this extension or something else."
+  },
+  {
+    "title": "Doesn't work",
+    "labels": [],
+    "body": "Installed it, nothing shows up."
+  },
+  {
+    "title": "Word count is wrong when words are separated by more than one space",
+    "labels": ["bug", "status-bar"],
+    "body": "**Steps**\n1. Open a new markdown file.\n2. Type `one  two` (two spaces between the words).\n\n**Expected:** status bar shows `2 words`.\n**Actual:** status bar shows `3 words`. Newlines between paragraphs inflate the count too: a file with two paragraphs separated by a blank line reports one extra word.\n\nLooks like `computeStats` in `src/stats.ts` splits on a single space. `node --test` currently has no case for this."
+  },
+  {
+    "title": "Changing noteStats.showCharacters has no effect until the window is reloaded",
+    "labels": ["bug", "settings"],
+    "body": "Toggle **Note Stats: Show Characters** in Settings. The status bar keeps showing only the word count. After *Developer: Reload Window* the character count appears.\n\nThe setting is read once at activation in `src/extension.ts` and never again. I'd expect it to apply immediately, like other status-bar extensions."
+  },
+  {
+    "title": "Character count setting not applied",
+    "labels": ["bug"],
+    "body": "Enabled the show characters option, status bar didn't change. Had to restart VS Code."
+  },
+  {
+    "title": "Slugify leaves a trailing hyphen and drops accented letters",
+    "labels": ["bug", "commands"],
+    "body": "Running **Note Stats: Slugify Current Line** on\n\n    ## Café menu, part 2!\n\nproduces `caf-menu-part-2-`.\n\nTwo problems:\n- trailing hyphen from the `!`\n- `é` is dropped entirely instead of being folded to `e` (or kept)\n\nExpected something like `cafe-menu-part-2`. Leading hyphens happen too if the line starts with punctuation."
+  },
+  {
+    "title": "noteStats.timestampFormat is ignored, Insert Timestamp always inserts ISO",
+    "labels": ["bug", "commands", "settings"],
+    "body": "Set `noteStats.timestampFormat` to `date`. Run **Note Stats: Insert Timestamp**. It inserts `2026-09-12T14:03:11.512Z` instead of `2026-09-12`.\n\n`formatTimestamp` in `src/stats.ts` takes the format parameter but doesn't use it. Expected:\n- `iso` → full ISO 8601 (current behavior)\n- `date` → `YYYY-MM-DD`\n- `datetime` → `YYYY-MM-DD HH:mm` in local time"
+  },
+  {
+    "title": "Show estimated reading time next to the word count",
+    "labels": ["feature-request", "status-bar"],
+    "body": "It would be great to see `~3 min read` in the status bar. Most tools assume about 200–250 words per minute. Not sure whether this should be always-on, a setting, or only in the tooltip, and what to show for very short files (`< 1 min`?)."
+  },
+  {
+    "title": "Reading time estimate",
+    "labels": [],
+    "body": "Please show reading time like Medium does."
+  },
+  {
+    "title": "Count only the selection when text is selected",
+    "labels": ["feature-request", "status-bar"],
+    "body": "When I select a paragraph, the status bar should show the stats for the selection instead of the whole document, and switch back when the selection is cleared. Multi-cursor selections should probably add up. Some editors show both (`120 of 2,340 words`)."
+  },
+  {
+    "title": "Command to copy the current stats to the clipboard",
+    "labels": ["feature-request", "commands"],
+    "body": "A **Note Stats: Copy Stats** command that puts something like `842 words, 4,913 characters` on the clipboard so I can paste it into a submission form. Plain text is fine."
+  },
+  {
+    "title": "Add a line and paragraph count",
+    "labels": ["feature-request"],
+    "body": "Line count and paragraph count would help for poetry and for docs with length limits per paragraph. Could go in the tooltip rather than the status bar text itself to keep it short."
+  },
+  {
+    "title": "Make Note Stats work on vscode.dev as a web extension",
+    "labels": ["feature-request", "web"],
+    "body": "The extension doesn't load on vscode.dev / github.dev. It would need a `browser` entry point and a bundler (esbuild) and must avoid Node-only APIs. Happy to help but I understand this may be a bigger change."
+  },
+  {
+    "title": "Status bar item does not hide when the last editor is closed",
+    "labels": ["bug", "status-bar"],
+    "body": "**Steps**\n1. Open a markdown file; the status bar shows `N words`.\n2. Close the editor (Cmd+W) so no editor is active.\n\n**Expected:** the Note Stats item disappears.\n**Actual:** it stays visible showing the last count.\n\nLooking at `refresh()` in `src/extension.ts`, `onDidChangeActiveTextEditor` fires with `undefined` and the code does call `statusItem.hide()` in that branch, so I'm not sure why it stays. Might be a race with `onDidChangeTextDocument`? Happy to provide a screen recording."
+  },
+  {
+    "title": "Word count counts numbers as words",
+    "labels": ["bug"],
+    "body": "A line like `3 apples and 2 pears` shows **5 words** in the status bar. Numbers aren't words. I'd expect 3 here, and the same for things like `2026-09-12` or a lone `—` on its own line."
+  },
+  {
+    "title": "Add spell checking to Note Stats",
+    "labels": ["feature-request"],
+    "body": "Since the extension already reads the whole document on every keystroke, it could also underline misspelled words and offer corrections in the quick-fix menu. A bundled English dictionary would be enough to start; other languages could come later as settings."
+  },
+  {
+    "title": "Is there a keyboard shortcut for Insert Timestamp?",
+    "labels": [],
+    "body": "I use **Note Stats: Insert Timestamp** many times a day from the command palette. I couldn't find a default keybinding in the README or in the Keyboard Shortcuts editor. Is there one, and if not, how do I add my own?"
+  }
+]
