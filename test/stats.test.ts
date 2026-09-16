@@ -23,3 +23,8 @@ test('slugify lowercases and strips the heading marker', () => {
 test('formatTimestamp iso returns an ISO string', () => {
   assert.equal(formatTimestamp(new Date(Date.UTC(2026, 0, 2, 3, 4, 5)), 'iso'), '2026-01-02T03:04:05.000Z');
 });
+
+test('computeStats collapses runs of whitespace', () => {
+  assert.equal(computeStats('one  two').words, 2);
+  assert.equal(computeStats('para one\n\npara two').words, 4);
+});

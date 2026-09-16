@@ -8,7 +8,7 @@ export interface TextStats {
 /** Count words and characters of a document body. */
 export function computeStats(text: string): TextStats {
   const trimmed = text.trim();
-  const words = trimmed.length === 0 ? 0 : trimmed.split(' ').length;
+  const words = trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
   return { words, characters: text.length };
 }
 
