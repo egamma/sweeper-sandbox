@@ -22,8 +22,11 @@ export function formatStats(stats: TextStats, showCharacters: boolean): string {
 export function slugify(heading: string): string {
   return heading
     .replace(/^#+\s*/, '')
+    .normalize('NFD')
+    .replace(/\p{M}+/gu, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-');
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 export type TimestampFormat = 'iso' | 'date' | 'datetime';

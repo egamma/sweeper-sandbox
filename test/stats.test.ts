@@ -20,6 +20,15 @@ test('slugify lowercases and strips the heading marker', () => {
   assert.equal(slugify('## Hello World'), 'hello-world');
 });
 
+test('slugify removes separator hyphens caused by edge punctuation', () => {
+  assert.equal(slugify('!Hello World'), 'hello-world');
+  assert.equal(slugify('Hello World!'), 'hello-world');
+});
+
+test('slugify folds accented letters to ASCII', () => {
+  assert.equal(slugify('## Café menu, part 2!'), 'cafe-menu-part-2');
+});
+
 test('formatTimestamp iso returns an ISO string', () => {
   assert.equal(formatTimestamp(new Date(Date.UTC(2026, 0, 2, 3, 4, 5)), 'iso'), '2026-01-02T03:04:05.000Z');
 });
