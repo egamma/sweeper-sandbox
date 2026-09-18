@@ -6,6 +6,14 @@ test('computeStats counts words in a simple sentence', () => {
   assert.equal(computeStats('one two three').words, 3);
 });
 
+test('computeStats counts words separated by whitespace runs', () => {
+  const repeatedSpaces = 'one  two';
+  const blankLine = 'one\n\n\ntwo';
+
+  assert.deepEqual(computeStats(repeatedSpaces), { words: 2, characters: repeatedSpaces.length });
+  assert.deepEqual(computeStats(blankLine), { words: 2, characters: blankLine.length });
+});
+
 test('computeStats returns zero for empty text', () => {
   assert.deepEqual(computeStats('   '), { words: 0, characters: 3 });
 });
