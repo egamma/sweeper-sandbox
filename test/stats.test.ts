@@ -37,6 +37,10 @@ test('slugify folds accented letters to ASCII', () => {
   assert.equal(slugify('## Café menu, part 2!'), 'cafe-menu-part-2');
 });
 
-test('formatTimestamp iso returns an ISO string', () => {
-  assert.equal(formatTimestamp(new Date(Date.UTC(2026, 0, 2, 3, 4, 5)), 'iso'), '2026-01-02T03:04:05.000Z');
+test('formatTimestamp supports each configured timestamp format', () => {
+  const date = new Date(2026, 0, 2, 3, 4, 5);
+
+  assert.equal(formatTimestamp(date, 'iso'), date.toISOString());
+  assert.equal(formatTimestamp(date, 'date'), date.toISOString().slice(0, 10));
+  assert.equal(formatTimestamp(date, 'datetime'), '2026-01-02 03:04');
 });
