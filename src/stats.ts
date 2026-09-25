@@ -32,6 +32,17 @@ export function slugify(heading: string): string {
 export type TimestampFormat = 'iso' | 'date' | 'datetime';
 
 /** Format a timestamp for insertion. */
-export function formatTimestamp(date: Date, _format: TimestampFormat): string {
-  return date.toISOString();
+export function formatTimestamp(date: Date, format: TimestampFormat): string {
+  if (format === 'iso') {
+    return date.toISOString();
+  }
+
+  const pad = (value: number): string => value.toString().padStart(2, '0');
+  const localDate = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+  if (format === 'date') {
+    return localDate;
+  }
+
+  return `${localDate} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }

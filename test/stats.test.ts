@@ -40,3 +40,11 @@ test('slugify folds accented letters to ASCII', () => {
 test('formatTimestamp iso returns an ISO string', () => {
   assert.equal(formatTimestamp(new Date(Date.UTC(2026, 0, 2, 3, 4, 5)), 'iso'), '2026-01-02T03:04:05.000Z');
 });
+
+test('formatTimestamp date returns a zero-padded local date', () => {
+  assert.equal(formatTimestamp(new Date(2026, 0, 2, 3, 4, 5), 'date'), '2026-01-02');
+});
+
+test('formatTimestamp datetime returns zero-padded local date and time', () => {
+  assert.equal(formatTimestamp(new Date(2026, 0, 2, 3, 4, 5), 'datetime'), '2026-01-02 03:04');
+});
