@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { computeStats, formatStats, formatTimestamp, slugify, TimestampFormat } from './stats';
+import { computeStats, formatStats, formatTimestamp, formatTooltip, slugify, TimestampFormat } from './stats';
 
 let statusItem: vscode.StatusBarItem;
 let visible = true;
@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }
     const stats = computeStats(editor.document.getText());
     statusItem.text = formatStats(stats, showCharacters);
-    statusItem.tooltip = 'Note Stats — click to hide';
+    statusItem.tooltip = formatTooltip(stats);
     statusItem.show();
   };
 
