@@ -29,6 +29,8 @@ Press F5 in VS Code to run the extension in an Extension Development Host.
 - `test/` — `node:test` suites
 - `scripts/seed.mjs` — recreates the labels, seeded issues and release history
   (operator tooling, see below)
+- `scripts/demo-reset.mjs` — resets the clone after a sweeper-fix / sweeper-plan
+  demo (operator tooling, see below)
 
 ## Behavior notes
 
@@ -57,3 +59,23 @@ node scripts/seed.mjs --with-history   # also seed the fix/release history
 
 GitHub issues cannot be deleted, so a reset closes the old set as *not planned*
 and opens fresh copies. Issue numbers advance; titles are the stable key.
+
+## Resetting after a demo
+
+`scripts/demo-reset.mjs` puts the clone back in its demo-ready state after a
+`sweeper-plan` / `sweeper-fix` run, so the same issues can be demoed again. It is a
+dry run unless `--apply` is given:
+
+```sh
+npm run demo-reset                     # show what would be reset
+npm run demo-reset -- --apply          # reset
+```
+
+It closes open sweeper skill PRs (head branch `<you>/fix-<n>` with the sweeper's
+seeded-by line in the body) and deletes their branches, removes the Agents
+window's per-session worktrees, deletes local `<you>/fix-*` and `<you>/agents/*`
+branches, returns the clone to an up-to-date `main`, and archives
+`.sweeper/plans/` under `.sweeper/archive/`. Nothing is discarded: uncommitted
+work goes to a labeled `git stash`, and every deleted branch is printed with its
+SHA. It refuses to run outside a `*/sweeper-sandbox` repository and never
+touches issues (that is `seed.mjs --reset`).
