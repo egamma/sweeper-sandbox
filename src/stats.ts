@@ -8,7 +8,7 @@ export interface TextStats {
 /** Count words and characters of a document body. */
 export function computeStats(text: string): TextStats {
   const trimmed = text.trim();
-  const words = trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
+  const words = trimmed.length === 0 ? 0 : trimmed.split(' ').length;
   return { words, characters: text.length };
 }
 
@@ -22,11 +22,8 @@ export function formatStats(stats: TextStats, showCharacters: boolean): string {
 export function slugify(heading: string): string {
   return heading
     .replace(/^#+\s*/, '')
-    .normalize('NFD')
-    .replace(/\p{M}+/gu, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^a-z0-9]+/g, '-');
 }
 
 export type TimestampFormat = 'iso' | 'date' | 'datetime';
