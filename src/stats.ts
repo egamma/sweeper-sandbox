@@ -18,12 +18,30 @@ export function formatStats(stats: TextStats, showCharacters: boolean): string {
   return showCharacters ? `${base}, ${stats.characters} chars` : base;
 }
 
-/** Turn a heading line into a URL-friendly slug. */
+/** Latin letters that have no accent to strip, mapped to their usual ASCII spelling. */
+const TRANSLITERATIONS: Record<string, string> = {
+  ß: 'ss',
+  æ: 'ae',
+  œ: 'oe',
+  ø: 'o',
+  ł: 'l',
+  đ: 'd',
+  þ: 'th',
+};
+
+/**
+ * Turn a heading line into a URL-friendly slug: lowercase ASCII words joined by single hyphens.
+ * Accented Latin letters are folded to ASCII; anything else is dropped. No leading or trailing hyphens.
+ */
 export function slugify(heading: string): string {
   return heading
     .replace(/^#+\s*/, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-');
+    .normalize('NFKD')
+    .replace(/\p{M}+/gu, '')
+    .replace(/[ßæœøłđþ]/g, (letter) => TRANSLITERATIONS[letter])
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 export type TimestampFormat = 'iso' | 'date' | 'datetime';
